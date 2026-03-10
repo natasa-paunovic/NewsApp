@@ -23,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -34,24 +36,25 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.android.newsapp.R
-import com.android.newsapp.domain.model.Article
 import com.android.newsapp.presentation.util.toDisplayDate
+import com.android.newsapp.presentation.viewmodel.NewsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleDetailScreen(
-    article: Article,
+    viewModel: NewsViewModel,
     onBackClick: () -> Unit,
 ) {
     val context = LocalContext.current
+    val article by viewModel.selectedArticle.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = article.sourceName,
+                        text = article?.sourceName.toString(),
                         maxLines = 1,
                     )
                 },
@@ -77,7 +80,7 @@ fun ArticleDetailScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
-            article.imageUrl?.let { imageUrl ->
+            article?.imageUrl?.let { imageUrl ->
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(imageUrl)
@@ -92,7 +95,7 @@ fun ArticleDetailScreen(
 
             Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
                 Text(
-                    text = article.title,
+                    text = article?.title.toString(),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                 )
@@ -100,12 +103,12 @@ fun ArticleDetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = article.publishedAt.toDisplayDate(),
+                    text = article?.publishedAt?.toDisplayDate().toString(),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
-                article.author?.let { author ->
+                article?.author?.let { author ->
                     Text(
                         text = "By $author",
                         style = MaterialTheme.typography.labelMedium,
@@ -117,7 +120,7 @@ fun ArticleDetailScreen(
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
-                article.description?.let { description ->
+                article?.description?.let { description ->
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodyLarge,
@@ -128,7 +131,7 @@ fun ArticleDetailScreen(
 
                 Button(
                     onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.url))
+                        val intent = article?.let { Intent(Intent.ACTION_VIEW, Uri.parse(it?.url)) }
                         context.startActivity(intent)
                     },
                     modifier = Modifier.fillMaxWidth(),

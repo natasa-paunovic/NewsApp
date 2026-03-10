@@ -8,8 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.android.newsapp.presentation.article.detail.ArticleDetailScreen
 import com.android.newsapp.presentation.article.list.ArticleListScreen
+import com.android.newsapp.presentation.navigation.NewsNavGraph
 import com.android.newsapp.presentation.ui.theme.NewsAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,11 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NewsAppTheme {
-                ArticleListScreen(onArticleClick = { it->
-
-
-
-                })
+                val navController = rememberNavController()
+                NewsNavGraph(navController = navController)
             }
         }
     }

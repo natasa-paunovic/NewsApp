@@ -26,7 +26,7 @@ import com.android.newsapp.presentation.article.components.*
 @Composable
 fun ArticleListScreen(
     onArticleClick: (Article) -> Unit,
-    viewModel: NewsViewModel = koinViewModel(),
+    viewModel: NewsViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -64,6 +64,7 @@ fun ArticleListScreen(
                         CircularProgressIndicator()
                     }
                 }
+
                 uiState.articles.isEmpty() -> {
                     Text(
                         "No articles found",
@@ -71,6 +72,7 @@ fun ArticleListScreen(
                         textAlign = TextAlign.Center
                     )
                 }
+
                 else -> {
                     ArticleList(
                         articles = uiState.articles,

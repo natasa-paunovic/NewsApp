@@ -2,11 +2,15 @@ package com.android.newsapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.newsapp.domain.model.Article
 import com.android.newsapp.domain.repository.ArticleRepository
 import com.android.newsapp.domain.util.Resource
 import com.android.newsapp.presentation.article.ArticleState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -16,6 +20,11 @@ class NewsViewModel(
 
     private val _state = MutableStateFlow(ArticleState())
     val uiState: StateFlow<ArticleState> = _state
+
+    private val _selectedArticleId = MutableStateFlow<String?>(null)
+    val selectedArticle: StateFlow<Article?> = _selectedArticleId
+        .combine(_state) { id, state -> state.articles.find { it.id == id } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val pageSize = 10
     private var lastFetchTime = 0L
@@ -83,4 +92,11 @@ class NewsViewModel(
             }
         }
     }
+
+    //Set selected article for detail screen
+    fun selectArticle(articleId: String) {
+        _selectedArticleId.value = articleId
+    }
+
+
 }
