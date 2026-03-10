@@ -50,7 +50,7 @@ class ArticleMapperTest {
         val domain = dto.toDomain()
 
         Assert.assertNull(domain.author)
-        Assert.assertEquals("Unknown", domain.sourceName)  // prazno -> default "Unknown"
+        Assert.assertEquals("Unknown", domain.sourceName)
         Assert.assertNull(domain.description)
         Assert.assertNull(domain.imageUrl)
     }
