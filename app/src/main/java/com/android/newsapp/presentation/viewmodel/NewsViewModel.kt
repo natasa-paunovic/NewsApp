@@ -98,5 +98,32 @@ class NewsViewModel(
         _selectedArticleId.value = articleId
     }
 
+    //for deep linking
+    fun fetchArticleById(articleId: String) {
+        viewModelScope.launch {
+
+            if (_state.value.articles.any { it.id == articleId }) return@launch
+
+            // fetch from repository
+            when (val result = repository.getNews(page = 1, pageSize = 100)) { // primer: fetch all or implement getById
+                is Resource.Success -> {
+                    val article = result.data?.articles?.find { it.id == articleId }
+                    article?.let { _selectedArticleId.value = it.id }
+                }
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isInitialLoading = false,
+                            isPaginationLoading = false,
+                            error = result.message
+                        )
+                    }
+
+                }
+                else -> {}
+            }
+        }
+    }
+
 
 }
