@@ -20,18 +20,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         debug {
             buildConfigField("String", "NEWS_API_KEY", "\"${project.findProperty("NEWS_API_KEY") ?: "8584737764fa4df2b774b5529fc734d2"}\"")
-            buildConfigField("String", "NEWS_BASE_URL", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL", "\"https://newsapi.org/v2/\"")
             isMinifyEnabled = false
             isShrinkResources = false
-            buildConfigField("String", "BASE_URL", "\"https://private-9f1bb1-homegate3.apiary-mock.com/\"")
         }
 
         release {
             buildConfigField("String", "NEWS_API_KEY", "\"${project.findProperty("NEWS_API_KEY") ?: "8584737764fa4df2b774b5529fc734d2"}\"")
-            buildConfigField("String", "NEWS_BASE_URL", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL", "\"https://newsapi.org/v2/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
