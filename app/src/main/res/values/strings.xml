@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NewsApp</string>
     <string name="all_caught_up">All caught up!</string>
+    <string name="read_full_article">Read full article</string>
 </resources>
